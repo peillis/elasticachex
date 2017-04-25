@@ -1,19 +1,23 @@
 # Elasticachex
 
-**TODO: Add description**
+An implementation of the Node Auto Discovery for Memcached in the
+ElastiCache service of AWS.
+
+See http://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/AutoDiscovery.html
+
+## Example
+
+    iex> Elasticachex.get_cluster_info("hostname.aws.com")
+    {:ok, ["10.0.9.107:11211", "10.0.9.109:11211"], "4"}
+
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `elasticachex` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `elasticachex` to your list of
+dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [{:elasticachex, "~> 0.1.0"}]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/elasticachex](https://hexdocs.pm/elasticachex).
-

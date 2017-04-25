@@ -1,20 +1,18 @@
 defmodule Elasticachex do
   @moduledoc """
-  Documentation for Elasticachex.
+  An implementation of the Node Auto Discovery for Memcached in the
+  ElastiCache service of AWS.
+
+  It simply returns the nodes of the cache cluster.
   """
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Elasticachex.hello
-      :world
-
-  """
   @timeout 5000  # timeout in ms
 
-
+  @doc """
+  The function to get the cluster info.
+  Returns `{:ok, [hosts_list], config_version}` or
+  `{:error, reason}`
+  """
   def get_cluster_info(host, port \\ 11211) do
     with {:ok, socket} <- connect(host, port),
          {:ok, command} <- get_command(socket),
