@@ -27,13 +27,25 @@ defmodule Elasticachex do
     case get_command(socket) do
       {:ok, command} ->
         case send_and_recv(socket, command) do
-          {:ok, data} -> data
+          {:ok, data} -> digest_cluster_data(data)
           {:error, reason} -> {:error, reason}
         end
       {:error, reason} -> {:error, reason}
     end
   end
 
+  def digest_cluster_data(data) do
+    values = String.split(data, "\n")
+    config_version = Enum.at(values, 1)
+    hosts = Enum.at(values, 2) |> String.split(" ")
+    hosts_list = Enum.reduce(hosts, [], fn(x, acc) ->
+      parts = String.split(x, "|")
+      ["#{Enum.at(parts, 1)}:#{Enum.at(parts, 2)}" | acc]
+    end)
+    {:ok, hosts_list, config_version}
+  end
+
+  # The command to execute is different depending on versions
   def get_command(socket) do
     case get_version(socket) do
       {:ok, version} ->
@@ -45,6 +57,7 @@ defmodule Elasticachex do
     end
   end
 
+  # Gets version number
   def get_version(socket) do
     case send_and_recv(socket, "version\n") do
       {:ok, data} ->
