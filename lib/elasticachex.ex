@@ -23,7 +23,7 @@ defmodule Elasticachex do
     end
   end
 
-  def digest_cluster_data(data) do
+  defp digest_cluster_data(data) do
     values = String.split(data, "\n")
     config_version = Enum.at(values, 1)
     hosts = Enum.at(values, 2) |> String.split(" ")
@@ -35,7 +35,7 @@ defmodule Elasticachex do
   end
 
   # The command to execute is different depending on versions
-  def get_command(socket) do
+  defp get_command(socket) do
     case get_version(socket) do
       {:ok, version} ->
         case Version.compare(version, "1.4.14") do
@@ -47,7 +47,7 @@ defmodule Elasticachex do
   end
 
   # Gets version number
-  def get_version(socket) do
+  defp get_version(socket) do
     case send_and_recv(socket, "version\n") do
       {:ok, data} ->
         <<"VERSION ", version :: binary >> = data
@@ -56,17 +56,17 @@ defmodule Elasticachex do
     end
   end
 
-  def send_and_recv(socket, command) do
+  defp send_and_recv(socket, command) do
     case :gen_tcp.send(socket, command) do
       :ok -> :gen_tcp.recv(socket, 0, @timeout)
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def connect(host, port) when is_binary(host) do
+  defp connect(host, port) when is_binary(host) do
     connect(String.to_charlist(host), port)
   end
-  def connect(host, port) do
+  defp connect(host, port) do
     :gen_tcp.connect(host, port, [:binary, active: false], @timeout)
   end
 
