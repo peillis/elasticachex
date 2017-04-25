@@ -15,22 +15,11 @@ defmodule Elasticachex do
   @timeout 5000  # timeout in ms
 
 
-  def main(host, port \\ 11211) do
-    case connect(host, port) do
-      {:ok, socket} ->
-        get_command(socket)
-      {:error, reason} -> {:error, reason}
-    end
-  end
-
-  def get_cluster_info(socket) do
-    case get_command(socket) do
-      {:ok, command} ->
-        case send_and_recv(socket, command) do
-          {:ok, data} -> digest_cluster_data(data)
-          {:error, reason} -> {:error, reason}
-        end
-      {:error, reason} -> {:error, reason}
+  def get_cluster_info(host, port \\ 11211) do
+    with {:ok, socket} <- connect(host, port),
+         {:ok, command} <- get_command(socket),
+         {:ok, data} <- send_and_recv(socket, command) do
+      digest_cluster_data(data)
     end
   end
 
