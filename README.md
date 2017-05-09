@@ -18,6 +18,6 @@ dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:elasticachex, "~> 0.1.0"}]
+  [{:elasticachex, "~> 1.0"}]
 end
 ```
