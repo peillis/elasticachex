@@ -1,5 +1,7 @@
 # Elasticachex
 
+[![Build Status](https://secure.travis-ci.org/peillis/elasticachex.svg)](http://travis-ci.org/peillis/elasticachex)
+
 An implementation of the Node Auto Discovery for Memcached in the
 ElastiCache service of AWS.
 
