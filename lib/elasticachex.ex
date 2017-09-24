@@ -5,9 +5,8 @@ defmodule Elasticachex do
 
   It simply returns the nodes of the cache cluster.
   """
-  import Elasticachex.Socket
-
-  @timeout 5000  # timeout in ms
+  @socket Application.get_env(:elasticachex, :socket_module)
+  @timeout Application.get_env(:elasticachex, :timeout)
 
   @doc """
   The function to get the cluster info.
@@ -15,9 +14,9 @@ defmodule Elasticachex do
   `{:error, reason}`
   """
   def get_cluster_info(host, port \\ 11211) do
-    with {:ok, socket} <- Socket.TCP.connect(host, port, timeout: @timeout),
+    with {:ok, socket} <- @socket.connect(host, port, @timeout),
          {:ok, command} <- get_command(socket),
-         {:ok, data} <- send_and_recv(socket, command, @timeout) do
+         {:ok, data} <- @socket.send_and_recv(socket, command, @timeout) do
       digest_cluster_data(data)
     end
   end
@@ -47,7 +46,7 @@ defmodule Elasticachex do
 
   # Gets version number
   defp get_version(socket) do
-    case send_and_recv(socket, "version\n", @timeout) do
+    case @socket.send_and_recv(socket, "version\n", @timeout) do
       {:ok, data} ->
         <<"VERSION ", version :: binary >> = data
         {:ok, String.trim(version)}

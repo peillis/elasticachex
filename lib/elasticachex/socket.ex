@@ -1,4 +1,10 @@
 defmodule Elasticachex.Socket do
+  @doc """
+  Connects to the service
+  """
+  def connect(host, port, timeout) do
+    Socket.TCP.connect(host, port, timeout: timeout)
+  end
 
   @doc """
   Sends a command to the socket connection and returns the response.
