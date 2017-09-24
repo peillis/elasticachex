@@ -5,6 +5,7 @@ defmodule Elasticachex do
 
   It simply returns the nodes of the cache cluster.
   """
+  import Elasticachex.Socket
 
   @timeout 5000  # timeout in ms
 
@@ -16,7 +17,7 @@ defmodule Elasticachex do
   def get_cluster_info(host, port \\ 11211) do
     with {:ok, socket} <- Socket.TCP.connect(host, port, timeout: @timeout),
          {:ok, command} <- get_command(socket),
-         {:ok, data} <- send_and_recv(socket, command) do
+         {:ok, data} <- send_and_recv(socket, command, @timeout) do
       digest_cluster_data(data)
     end
   end
@@ -52,11 +53,6 @@ defmodule Elasticachex do
         {:ok, String.trim(version)}
       {:error, reason} -> {:error, reason}
     end
-  end
-
-  defp send_and_recv(socket, command) do
-    socket |> Socket.Stream.send!(command)
-    socket |> Socket.Stream.recv(timeout: @timeout)
   end
 
 end
