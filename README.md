@@ -1,5 +1,7 @@
 # Elasticachex
 
+[![Build Status](https://secure.travis-ci.org/peillis/elasticachex.svg)](http://travis-ci.org/peillis/elasticachex)
+
 An implementation of the Node Auto Discovery for Memcached in the
 ElastiCache service of AWS.
 
@@ -18,6 +20,6 @@ dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:elasticachex, "~> 1.0"}]
+  [{:elasticachex, "~> 1.1"}]
 end
 ```

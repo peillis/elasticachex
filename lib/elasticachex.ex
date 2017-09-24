@@ -5,8 +5,8 @@ defmodule Elasticachex do
 
   It simply returns the nodes of the cache cluster.
   """
-
-  @timeout 5000  # timeout in ms
+  @socket Application.get_env(:elasticachex, :socket_module)
+  @timeout Application.get_env(:elasticachex, :timeout)
 
   @doc """
   The function to get the cluster info.
@@ -14,9 +14,9 @@ defmodule Elasticachex do
   `{:error, reason}`
   """
   def get_cluster_info(host, port \\ 11211) do
-    with {:ok, socket} <- connect(host, port),
+    with {:ok, socket} <- @socket.connect(host, port, @timeout),
          {:ok, command} <- get_command(socket),
-         {:ok, data} <- send_and_recv(socket, command) do
+         {:ok, data} <- @socket.send_and_recv(socket, command, @timeout) do
       digest_cluster_data(data)
     end
   end
@@ -38,7 +38,7 @@ defmodule Elasticachex do
       {:ok, version} ->
         case Version.compare(version, "1.4.14") do
           :lt -> {:ok, "get AmazonElastiCache:cluster\n"}
-          _ -> {:ok, "config get cluster\n"}
+          _   -> {:ok, "config get cluster\n"}
         end
       {:error, reason} -> {:error, reason}
     end
@@ -46,26 +46,12 @@ defmodule Elasticachex do
 
   # Gets version number
   defp get_version(socket) do
-    case send_and_recv(socket, "version\n") do
+    case @socket.send_and_recv(socket, "version\n", @timeout) do
       {:ok, data} ->
         <<"VERSION ", version :: binary >> = data
         {:ok, String.trim(version)}
       {:error, reason} -> {:error, reason}
     end
-  end
-
-  defp send_and_recv(socket, command) do
-    case :gen_tcp.send(socket, command) do
-      :ok -> :gen_tcp.recv(socket, 0, @timeout)
-      {:error, reason} -> {:error, reason}
-    end
-  end
-
-  defp connect(host, port) when is_binary(host) do
-    connect(String.to_charlist(host), port)
-  end
-  defp connect(host, port) do
-    :gen_tcp.connect(host, port, [:binary, active: false], @timeout)
   end
 
 end
