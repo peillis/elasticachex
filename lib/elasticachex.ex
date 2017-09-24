@@ -47,7 +47,7 @@ defmodule Elasticachex do
 
   # Gets version number
   defp get_version(socket) do
-    case send_and_recv(socket, "version\n") do
+    case send_and_recv(socket, "version\n", @timeout) do
       {:ok, data} ->
         <<"VERSION ", version :: binary >> = data
         {:ok, String.trim(version)}
