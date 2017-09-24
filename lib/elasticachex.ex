@@ -14,7 +14,7 @@ defmodule Elasticachex do
   `{:error, reason}`
   """
   def get_cluster_info(host, port \\ 11211) do
-    with {:ok, socket} <- connect(host, port),
+    with {:ok, socket} <- Socket.TCP.connect(host, port, timeout: @timeout),
          {:ok, command} <- get_command(socket),
          {:ok, data} <- send_and_recv(socket, command) do
       digest_cluster_data(data)
@@ -38,7 +38,7 @@ defmodule Elasticachex do
       {:ok, version} ->
         case Version.compare(version, "1.4.14") do
           :lt -> {:ok, "get AmazonElastiCache:cluster\n"}
-          _ -> {:ok, "config get cluster\n"}
+          _   -> {:ok, "config get cluster\n"}
         end
       {:error, reason} -> {:error, reason}
     end
@@ -55,17 +55,8 @@ defmodule Elasticachex do
   end
 
   defp send_and_recv(socket, command) do
-    case :gen_tcp.send(socket, command) do
-      :ok -> :gen_tcp.recv(socket, 0, @timeout)
-      {:error, reason} -> {:error, reason}
-    end
-  end
-
-  defp connect(host, port) when is_binary(host) do
-    connect(String.to_charlist(host), port)
-  end
-  defp connect(host, port) do
-    :gen_tcp.connect(host, port, [:binary, active: false], @timeout)
+    socket |> Socket.Stream.send!(command)
+    socket |> Socket.Stream.recv(timeout: @timeout)
   end
 
 end
