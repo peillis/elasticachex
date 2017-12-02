@@ -4,7 +4,7 @@ defmodule Elasticachex.Mixfile do
   def project do
     [
       app: :elasticachex,
-      version: "1.1.0",
+      version: "1.1.1",
       elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env),
       build_embedded: Mix.env == :prod,
@@ -41,7 +41,7 @@ defmodule Elasticachex.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ex_doc, "~> 0.15.0", only: :dev},
+      {:ex_doc, "~> 0.18", only: :dev},
       {:socket, "~> 0.3"}
     ]
   end

@@ -23,3 +23,10 @@ def deps do
   [{:elasticachex, "~> 1.1"}]
 end
 ```
+
+## Configuration
+
+```elixir
+config :elasticachex,
+  timeout: 5000  # Timeout in milliseconds
+```

@@ -5,8 +5,8 @@ defmodule Elasticachex do
 
   It simply returns the nodes of the cache cluster.
   """
-  @socket Application.get_env(:elasticachex, :socket_module)
-  @timeout Application.get_env(:elasticachex, :timeout)
+  @socket Application.get_env(:elasticachex, :socket_module, Elasticachex.Socket)
+  @timeout Application.get_env(:elasticachex, :timeout, 5000)
 
   @doc """
   The function to get the cluster info.
