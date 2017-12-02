@@ -27,20 +27,20 @@ defmodule Elasticachex do
     case length(values) do
       6 ->
         config_version = Enum.at(values, 1)
-        hosts =
-          values
-          |> Enum.at(2)
-          |> String.split(" ")
-        {:ok, get_hosts_list(hosts), config_version}
-      _ -> {:error, "Not recognized response from endpoint"}
+        hosts_string = Enum.at(values, 2)
+        {:ok, get_hosts_list(hosts_string), config_version}
+      _ ->
+        {:error, "Not recognized response from endpoint"}
     end
   end
 
-  defp get_hosts_list(hosts) do
-    Enum.reduce(hosts, [], fn(x, acc) ->
-      parts = String.split(x, "|")
-      ["#{Enum.at(parts, 1)}:#{Enum.at(parts, 2)}" | acc]
-    end)
+  defp get_hosts_list(hosts_string) do
+    hosts_string
+    |> String.split(" ")
+    |> Enum.reduce([], fn(x, acc) ->
+         parts = String.split(x, "|")
+         ["#{Enum.at(parts, 1)}:#{Enum.at(parts, 2)}" | acc]
+       end)
   end
 
   # The command to execute is different depending on versions
