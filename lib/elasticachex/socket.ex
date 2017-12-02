@@ -1,9 +1,14 @@
 defmodule Elasticachex.Socket do
+  @moduledoc false
+
+  alias Socket.TCP
+  alias Socket.Stream
+
   @doc """
   Connects to the service
   """
   def connect(host, port, timeout) do
-    Socket.TCP.connect(host, port, timeout: timeout)
+    TCP.connect(host, port, timeout: timeout)
   end
 
   @doc """
@@ -15,8 +20,8 @@ defmodule Elasticachex.Socket do
       {:ok, VERSION 1.4.34\r\n"}
   """
   def send_and_recv(socket, command, timeout) do
-    socket |> Socket.Stream.send!(command)
-    socket |> Socket.Stream.recv(timeout: timeout)
+    socket |> Stream.send!(command)
+    socket |> Stream.recv(timeout: timeout)
   end
 
 end

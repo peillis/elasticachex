@@ -5,7 +5,8 @@ defmodule Elasticachex do
 
   It simply returns the nodes of the cache cluster.
   """
-  @socket Application.get_env(:elasticachex, :socket_module, Elasticachex.Socket)
+  @socket Application.get_env(:elasticachex, :socket_module,
+                              Elasticachex.Socket)
   @timeout Application.get_env(:elasticachex, :timeout, 5000)
 
   @doc """
@@ -13,7 +14,7 @@ defmodule Elasticachex do
   Returns `{:ok, [hosts_list], config_version}` or
   `{:error, reason}`
   """
-  def get_cluster_info(host, port \\ 11211) do
+  def get_cluster_info(host, port \\ 11_211) do
     with {:ok, socket} <- @socket.connect(host, port, @timeout),
          {:ok, command} <- get_command(socket),
          {:ok, data} <- @socket.send_and_recv(socket, command, @timeout) do
@@ -23,13 +24,23 @@ defmodule Elasticachex do
 
   defp digest_cluster_data(data) do
     values = String.split(data, "\n")
-    config_version = Enum.at(values, 1)
-    hosts = Enum.at(values, 2) |> String.split(" ")
-    hosts_list = Enum.reduce(hosts, [], fn(x, acc) ->
+    case length(values) do
+      6 ->
+        config_version = Enum.at(values, 1)
+        hosts =
+          values
+          |> Enum.at(2)
+          |> String.split(" ")
+        {:ok, get_hosts_list(hosts), config_version}
+      _ -> {:error, "Not recognized response from endpoint"}
+    end
+  end
+
+  defp get_hosts_list(hosts) do
+    Enum.reduce(hosts, [], fn(x, acc) ->
       parts = String.split(x, "|")
       ["#{Enum.at(parts, 1)}:#{Enum.at(parts, 2)}" | acc]
     end)
-    {:ok, hosts_list, config_version}
   end
 
   # The command to execute is different depending on versions
