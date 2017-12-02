@@ -5,7 +5,7 @@
 An implementation of the Node Auto Discovery for Memcached in the
 ElastiCache service of AWS.
 
-See http://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/AutoDiscovery.html
+See [AWS documentation](http://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/AutoDiscovery.html)
 
 ## Example
 
