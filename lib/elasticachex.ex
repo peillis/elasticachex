@@ -15,10 +15,17 @@ defmodule Elasticachex do
   `{:error, reason}`
   """
   def get_cluster_info(host, port \\ 11_211) do
-    with {:ok, socket} <- @socket.connect(host, port, @timeout),
-         {:ok, command} <- get_command(socket),
-         {:ok, data} <- @socket.send_and_recv(socket, command, @timeout) do
+    with {:ok, socket}  <- @socket.connect(host, port, @timeout), 
+      do: do_get_cluster_info(socket)
+  end
+
+  defp do_get_cluster_info(socket) do
+    with {:ok, command} <- get_command(socket),
+         {:ok, data}    <- @socket.send_and_recv(socket, command, @timeout),
+         :ok            <- @socket.close(socket) do
       digest_cluster_data(data)
+    else
+      _ -> @socket.close(socket)
     end
   end
 
