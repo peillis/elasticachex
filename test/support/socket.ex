@@ -10,6 +10,8 @@ defmodule Elasticachex.SocketTest do
     {:ok, :multiple_nodes}
   end
 
+  def close(_), do: :ok
+
   def send_and_recv(:socket_1, command, _timeout) do
     case command do
       "version\n" -> {:ok, "VERSION 1.4.14\r\n"}

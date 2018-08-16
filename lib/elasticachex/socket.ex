@@ -11,6 +11,10 @@ defmodule Elasticachex.Socket do
     TCP.connect(host, port, timeout: timeout)
   end
 
+  def close(socket) do
+    Socket.Stream.close(socket)
+  end
+
   @doc """
   Sends a command to the socket connection and returns the response.
 
