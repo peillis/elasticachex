@@ -46,7 +46,7 @@ defmodule Elasticachex do
     |> String.split(" ")
     |> Enum.reduce([], fn(x, acc) ->
          parts = String.split(x, "|")
-         ["#{Enum.at(parts, 1)}:#{Enum.at(parts, 2)}" | acc]
+         ["#{Enum.at(parts, 0)}:#{Enum.at(parts, 2)}" | acc]
        end)
   end
 
