@@ -10,7 +10,7 @@ See [AWS documentation](http://docs.aws.amazon.com/AmazonElastiCache/latest/User
 ## Example
 
     iex> Elasticachex.get_cluster_info("hostname.aws.com")
-    {:ok, ["10.0.9.107:11211", "10.0.9.109:11211"], "4"}
+    {:ok, ["memcached.xlttkm.0001.euw1.cache.amazonaws.com:11211", "memcached.xlttkm.0002.euw1.cache.amazonaws.com:11211"], "4"}
 
 
 ## Installation
